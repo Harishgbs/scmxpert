@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Signup</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+      #captcha{
+        user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      }
+    </style>
+</head>
+<body class="" style="background-color: blueviolet;" onload="fill()">
+  <header>
+    <!-- place navbar here -->
+  </header>
+  <main>
+    <div class="shadow-lg container-sm border border-secondary rounded my-3 mx-auto pb-4 w-60 text-white"  >
+        <form action="{{url_for('newuser')}}" method="post" class="was-validated" id="signupform">
+            <h2 class="text-white d-flex justify-content-center bg-primary rounded-bottom">SIGNUP<span class="badge bg-primary"></span></h2>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text"
+                  class="form-control" name="username" id="username" aria-describedby="usernamehelpId" placeholder="Enter username" required>
+                <small id="usernamehelpId" class="form-text text-muted"></small>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelpId" placeholder="Enter your email" required>
+                <small id="emailHelpId" class="form-text text-muted"></small>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password"
+                  class="form-control" name="password" id="password" aria-describedby="password_helpId" placeholder="Enter Password" required pattern=".{8,}" oninvalid="setCustomValidity('Password must be atleast 8 characters long')" onchange="try{setCustomValidity('')}catch(e){}">
+                <small id="password_helpId" class="form-text text-muted"></small>
+              </div>
+              <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm-Password:
+                </label>
+                <input type="password"
+                  class="form-control" name="confirm_password" id="confirm_password" aria-describedby="confirm_password_helpId" placeholder="Enter confirm password" required oninput="check()">
+                <small id="confirm_password_helpId" class="form-text text-muted"></small>
+              </div>
+              <div class="mb-3">
+                <label for="captcha" class="form-label">Captcha:</label>
+                <div id="captcha" class="mb-3 border border-dark rounded pill bg-white d-flex justify-content-center" style="color: black;height: 38px; font-size: 19px;width: 300px;"></div>
+                <input type="text" name="captcha" id="entered_captcha" class="form-control" aria-describedby="confirm_password_helpId" placeholder="Enter captcha" oninput="verify_captcha()">
+                <small id="entered_captcha_helpId" class="form-text text-muted"></small>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button id="submit"class="btn btn-success " >Submit</button>
+              </div>
+              <div class="d-flex justify-content-center">
+                <p>I already have an account?<a href="{{url_for('signin')}}" class="text-black">Signin</a></p>
+              </div>
+        </form>
+    </div>
+  </main>
+  <footer>
+    
+  </footer>
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
+  </script>
+  <script>  
+            document.getElementById('signupform').addEventListener('submit',function(event){
+              var password = document.getElementById('password').value
+            var confirm_password = document.getElementById('confirm_password').value
+            if(password != confirm_password){
+              document.getElementById("confirm_password_helpId").innerText="Passwords must be same" 
+                document.getElementById('confirm_password').setCustomValidity('Confirm password must be same as password') 
+                document.getElementById('confirm_password').reportValidity();
+                event.preventDefault()
+                // document.getElementById('confirm_password').onchange="try{setCustomValidity('')}catch(e){}"
+            }
+                if(password == confirm_password){
+                document.getElementById("confirm_password_helpId").innerText=""
+            }
+        })
+        function check(){
+          var password = document.getElementById('password').value
+            var confirm_password = document.getElementById('confirm_password').value
+            if(password != confirm_password){ 
+                document.getElementById('confirm_password').setCustomValidity('Confirm password must be same as password') 
+                document.getElementById('confirm_password').reportValidity();
+            }
+                if(password == confirm_password){
+                  document.getElementById('confirm_password').setCustomValidity('')
+                document.getElementById("confirm_password_helpId").innerText=""
+            }
+        }
+        function generateRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+        function fill(){
+          document.getElementById("captcha").innerHTML=generateRandomString(5);
+        }
+        function verify_captcha(){
+          var captcha=document.getElementById("captcha").innerHTML
+          var enteredCaptcha = document.getElementById("entered_captcha").value
+          // const fom=document.getElementById("signupform")
+          if(enteredCaptcha==captcha){
+            document.getElementById('entered_captcha').setCustomValidity('');
+          }
+          else{
+          //   fom.addEventListener('submit', function(event) {
+          //   event.preventDefault();
+          // });
+            document.getElementById('entered_captcha').setCustomValidity('Entered captcha is wrong') 
+            document.getElementById('entered_captcha').reportValidity();
+          }
+        }
+  </script>
+</body>
+</html>

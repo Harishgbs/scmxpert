@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title class="lead">SCM Xpert</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    body{
+      padding: auto;
+    }
+    #hover-nav {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100%;
+      z-index: 1000;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      animation: navAnimation .8s ease-in-out forwards;
+    }
+    #hover-icon:hover + #hover-nav,
+    #hover-nav:hover {
+      display: block;
+    }
+    
+    .nav-item:hover {
+      transition: all .3s;
+      border-radius: 9px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    #userinformation,.shipmentDetail{
+      word-wrap: break-word;
+    }
+    header{
+      animation: mainheadingAnimation .9s ease-in;
+    }
+    @keyframes navAnimation{
+      from{
+        transform: translateX(-300px);
+      }
+      to{
+        transform: translateX(0);
+      }
+    }
+    @keyframes mainheadingAnimation{
+      from{transform: translateY(-60px);}
+      to{transform: translateY(0px);}
+    }
+    #image-slider-container{
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn ease-in .5s forwards;
+    }
+    
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+#logoutButton:hover{
+background-color: red;
+}
+.scroll-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scroll-fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+  </style>
+</head>
+
+<body>
+
+  <header class="bg-secondary position-sticky" style="height: 60px; top: 0;" >
+    <!-- place navbar here -->
+    <span id="hover-icon" class="text-white p-1" style="cursor: pointer; font-size: 30px;">&#9776;
+  </span>
+  <div id="hover-nav" style="width: 350px;">
+    <button id="logoutButton" class="btn btn-primary float-end lead" type="button" onclick="logout()">Logout</button>
+    <div class="userDetail" onclick="document.getElementById('userDetailContainer').style.display='flex'" style="cursor: pointer;">
+      <img src="" id="navProfilePic" alt="hlo" style="width: 100px;height: 100px;border-radius: 50%;">
+      <b class="lead" id="user">&nbsp;{{username}}</b> 
+    </div>
+    <ul class="nav flex-column pt-5">
+      <li class="nav-item lead"><a href="#dashboard" class="nav-link active " onclick="typeWriter(document.getElementById('dbh'),100)" data-bs-toggle="tab">Dashboard</a></li>
+      <li class="nav-item lead"><a href="#createShipment" class="nav-link " onclick="typeWriter(document.getElementById('csh'),100)" data-bs-toggle="tab">Create Shipment</a></li>
+      <li class="nav-item lead"><a href="#myShipments" class="nav-link " onclick="typeWriter(document.getElementById('msh'),100)" data-bs-toggle="tab">My Shipments</a></li>
+      <li class="nav-item lead" id="navdeviceData"><a href="#deviceData" onclick="typeWriter(document.getElementById('ddh'),100)" class="nav-link " data-bs-toggle="tab">Device Data</a></li>
+    </ul>
+  </div>
+  <div class="container-fluid d-flex justify-content-center" id="mh">
+  
+  <h1 class="text-center text-white lead" style="font-size: 30px; position: absolute; top: 10px;">SCM-Expert</h1>
+  </div>
+  </header>
+  <main>    
+    <div class="tab-content pt-2">
+      <div class="tab-pane container active m-0 mw-100"id="dashboard">
+        <div class="container-fluid d-flex justify-content-center">
+          <h1 class="display-4 typing-effect" id="dbh" style="font-size: 30px;">Dashboard</h1>
+          </div>
+        <div class="container-fluid d-flex justify-content-center border mt-4 rounded p-3">
+          <!-- <img src="../static/images/SCM.png" alt="" class="img-fluid"> -->
+          <div id="image-slider-container" class="carousel slide position-relative rounded" style=" z-index:-1;" data-bs-ride="carousel">
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner rounded" style="max-width: 600px; max-height: 300px;">
+              <div class="carousel-item active">
+                <img src="{{url_for('static',path='images/SCM1.png')}}" alt="Los Angeles" class="img-fluid rounded" >
+              </div>
+              <div class="carousel-item">
+                <img src="{{url_for('static',path='images/SCM2.jpg')}}" alt="Chicago" class="img-fluid rounded" >
+              </div>
+              <div class="carousel-item">
+                <img src="{{url_for('static',path='images/SCM3.jpg')}}" alt="New York" class="img-fluid rounded">
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="container-fluid mt-4">
+            <p class="m-2 lead ">
+Supply Chain Management (SCM) is a strategic process that orchestrates the end-to-end flow of goods, services, information, and finances across various stages, from raw material procurement to the final product reaching the consumer. 
+The core aim is to optimize operational efficiency, minimize costs, and deliver value to customers.
+Planning is a fundamental aspect, involving demand forecasting and synchronized production schedules to meet market needs.
+Sourcing entails selecting and managing suppliers, fostering strong relationships, and ensuring a steady supply of high-quality materials.
+In manufacturing, SCM focuses on efficient production processes and stringent quality control, while logistics manages transportation, storage, and distribution, ensuring timely delivery of products.
+Warehousing and distribution further enhance inventory control and facilitate the smooth movement of goods through the supply chain. Customer service plays a pivotal role, addressing inquiries, managing returns, and ensuring overall satisfaction.
+Risk management strategies are vital, identifying and mitigating potential disruptions, ensuring a resilient and responsive supply chain.
+Technological advancements play a crucial role in modern SCM, with data analytics, IoT, and blockchain enhancing visibility and collaboration.
+These innovations provide real-time insights into the supply chain, enabling businesses to make informed decisions, adapt to dynamic market conditions, and build a more agile and responsive system.
+In an era of globalization, where supply chains span across the globe, effective SCM is paramount for businesses to navigate complexities, minimize risks, and stay competitive in delivering products efficiently to a diverse and demanding customer base.</p>
+        </div>
+
+
+
+
+      </div>
+      <div class="tab-pane container fade  m-0 mw-100" id="createShipment">
+        <div class="container-fluid">
+          <h1 class="text-center lead" id="csh" style="font-size: 30px;">Create Shipment</h1>
+          </div>
+        <form action="{{url_for('createShipment')}}" method="post" class="was-validated">
+          <div class="mb-3" style="display: none;">
+            <label for="username" class="form-label">Username</label>
+            <input type="text"
+              class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="">
+            <small id="helpId" class="form-text text-muted">Help text</small>
+          </div>
+          <div class="container d-flex">
+          <div class="container">
+            <div class="mb-3">
+              <label for="shipmentNumber" class="form-label">Shipment Number*</label>
+              <input type="text"
+                class="form-control" name="shipmentNumber" id="shipmentNumber" aria-describedby="shipmentNumberHelpId" placeholder="Shipment Number" required>
+            </div>
+            <div class="mb-3">
+              <label for="routeDetails" class="form-label">Route Details*</label>
+              <select class="form-select form-select-sm" name="routeDetails" id="routeDetails" required>
+                <option disabled>Select Route</option>
+                <option value="route1">Route 1</option>
+                <option value="route2">Route 2</option>
+                <option value="route3">Route 3</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="selectedDevice" class="form-label">Device*</label>
+              <select class="form-select form-select-sm" name="selectedDevice" id="selectedDevice" required>
+                <option disabled>Select Device</option>
+                <option value="Device1">Device 1</option>
+                <option value="Device2">Device 2</option>
+                <option value="Device3">Device 3</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="PONumber" class="form-label">PO Number*</label>
+              <input type="text"
+                class="form-control" name="PONumber" id="PONumber" aria-describedby="helpId" placeholder="PO Number" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+              <label for="NDCNumber" class="form-label">NDC Number*</label>
+              <input type="text"
+                class="form-control" name="NDCNumber" id="NDCNumber" aria-describedby="helpId" placeholder="NDC Number" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+              <label for="snoofGoods" class="form-label">Serial number of Goods</label>
+              <input type="text"
+                class="form-control" name="snoofGoods" id="snoofGoods" aria-describedby="helpId" placeholder="Serial number of goods" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button class="btn btn-primary" type="reset">Clear Details</button>
+            </div>
+          </div>
+          <div class="container">
+            <div class="mb-3">
+              <label for="contNumber" class="form-label">Container Number*</label>
+              <input type="text"
+                class="form-control" name="contNumber" id="contNumber" aria-describedby="helpId" placeholder="Container Number" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+              <label for="goodsType" class="form-label">Goods Type*</label>
+              <select class="form-select form-select-sm" name="goodsType" id="goodsType" required>
+                <option disabled>Select Goods</option>
+                <option value="Goods1">Goods 1</option>
+                <option value="Goods2">Goods 2</option>
+                <option value="Goods3">Goods 3</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="deliveryDate" class="form-label">Expected Delivery Date*</label>
+              <input type="date"
+                class="form-control" name="deliveryDate" id="deliveryDate" aria-describedby="helpId" placeholder="" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+              <label for="deliveryNo" class="form-label">Delivery Number*</label>
+              <input type="text"
+                class="form-control" name="deliveryNo" id="deliveryNo" aria-describedby="helpId" placeholder="Delivery Number" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+              <label for="batchId" class="form-label">Batch Id*</label>
+              <input type="text"
+                class="form-control" name="batchId" id="batchId" aria-describedby="helpId" placeholder="Batch Id" required>
+              <small id="helpId" class="form-text text-muted"></small>
+            </div>
+            <div class="mb-3">
+              <label for="shipmentDescription" class="form-label">Shipment Description*</label>
+              <textarea class="form-control" name="shipmentDescription" id="shipmentDescription" rows="1" placeholder="Shipment Description" required></textarea>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary">Create Shipment</button>
+            </div>
+          </div>
+        </div>
+        </form>
+      </div>
+      <div class="tab-pane container fade  m-0 mw-100 " id="myShipments">
+        <div class="container-fluid d-flex justify-content-center">
+          <h1 class="text-center lead" id="msh" style="font-size: 30px;">My Shipments</h1>
+          </div>
+        <div class="container-fluid" id="shipmentDetailsContainer">
+        </div>
+    </div>
+    <div class="tab-pane container fade  m-0 mw-100" id="deviceData"> 
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <h1 class="text-center lead" id="ddh" style="font-size: 30px;">Device Data</h1>
+        </div>
+        <input class="float-end" type="search" id="searchinput" placeholder='Enter Device Id 🔎' oninput="searchdata()">
+      </div>
+        <div class="container-fluid">
+        <table class="table table-primary">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Battery Level </th>
+              <th scope="col">Device ID</th>
+              <th scope="col">First Sensor temperature</th>
+              <th scope="col">Route_From</th>
+              <th scope="col">Route_To</th>
+            </tr>
+          </thead>
+          <tbody id="deviceDataTable">
+          </tbody>
+        </table>
+        </div>
+    </div>
+    <div class="mb-3 justify-content-center w-100" id="userDetailContainer" style="position:absolute; top: 100px;">
+      <div class="shadow-lg w-75 bg-light d-flex justify-content-center">
+        <div class="w-50">
+          <div class="d-flex justify-content-center">
+          <img src="" alt="hlo" id="userDetailProfilePic" class="rounded" style="height: 300px;width: 400px;" >
+          </div>
+            <form action="{{url_for('uploadPicPath')}}" method="post" id="picForm" style="display: none;" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="" class="form-label">Username</label>
+                <input type="text"
+                  class="form-control" name="username" id="un1" aria-describedby="helpId" placeholder="">
+                <small id="helpId" class="form-text text-muted">Help text</small>
+              </div>
+              <input type="file" class="form-control" name="profilePic" id="fileinput" onchange="document.getElementById('picForm').submit();">
+            </form>
+          <h6 class="text-primary text-center my-1 " onclick="document.getElementById('fileinput').click()" style="cursor: pointer;">Change profile picture</h6>
+          <h6 class="text-warning text-center my-1 " onclick="deleteProfile()" style="cursor: pointer;">Remove profile picture</h6>
+          <h3 class="text-center mt-3 "><b id="user1">&nbsp;{{username}}</b> </h3>
+          <div class="mt-2" id="userinformation">
+            <label class="form-label text-muted" for="email">Email</label>
+            <h6 class="border-bottom border-secondary w-100" name="email" id="userInformationEmail">email</h6>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn-close float-end" id="closeUserInformation" onclick="document.getElementById('userDetailContainer').style.display='none'"></button>
+    </div>
+  </main>
+  <footer>
+   <!-- place footer here -->
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
+  </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var slider = document.getElementById('image-slider-container');
+    var carousel = new bootstrap.Carousel(slider, {
+        interval: 2000  // Change this value to adjust the slide duration (in milliseconds)
+    });
+});
+  verifyToken();
+  document.getElementById('userDetailContainer').style.display='none'
+  function logout(){
+    localStorage.clear()
+    location.replace("/")
+  }
+  async function verifyToken(){
+try {
+  var t = '{{token}}';
+  if (t == '')
+  {
+    if (localStorage.getItem('userdetail') == null) 
+    {
+      window.location.href = "{{url_for('signin')}}";
+    }
+    else
+    {
+      var dataToSend = { "data": localStorage.getItem('userdetail') };
+      const response = await fetch('/verify_token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      const data = await response.json();
+      if (data.verification != 'success')
+      {
+        window.location.href = "{{url_for('signin')}}";
+      }
+      else
+      {
+        document.getElementById('user').innerText=data['username']
+        document.getElementById('user1').innerText=data['username']
+        document.getElementById('username').value=data['username']
+        document.getElementById('un1').value=data['username']
+        document.getElementById('userInformationEmail').innerText=data['email']
+        document.getElementById('navProfilePic').src=data['profilepic']
+        document.getElementById('userDetailProfilePic').src=data['profilepic']
+        localStorage.setItem('username',data['username'])
+        var shipments=data['shipments']
+        var i=1;
+        if (data['account']=='user'){
+          document.getElementById('navdeviceData').innerHTML=""
+          document.getElementById('deviceData').innerHTML=""
+        }
+        else if(data['account']=='admin')
+        { document.getElementById('navdeviceData').style.display='block'
+          getDeviceData();  
+        }  
+        for(shipment in shipments){
+            document.getElementById('shipmentDetailsContainer').innerHTML+=`
+            <div class="shipmentDetail container-fluid border border-secondary rounded-5 m-3 lead" id="shipmentDetail"`+i+`>
+            <div class="container-fluid">Shipmen Number: `+shipments[shipment]['Shipment_Number']+`<span class="float-end" id="show`+i+`" onclick="display(`+i+`)" style="cursor:pointer">Show Details<i class="bi bi-caret-down-fill"></i></span> <span class="float-end" id="hide`+i+`" onclick="undisplay(`+i+`)" style="display:none;cursor:pointer">Hide Details<i class="bi bi-caret-up-fill"></i></span></div>
+          <div class="container-fluid" id="shipmentinformation`+i+`" style="display:none">
+            <h5>Route Details:`+shipments[shipment]['RouteDetails']+`</h5>
+            <h5>Device :`+shipments[shipment]['SelectedDevice']+`</h5>
+            <h5>PO Number :`+shipments[shipment]['PONumber']+`</h5>
+            <h5>NDC Number :`+shipments[shipment]['NDCNumber']+`</h5>
+            <h5>Serial number of Goods :`+shipments[shipment]['SnoOfGoods']+`</h5>
+            <h5>Container Number :`+shipments[shipment]['ContainerNo']+`</h5>
+            <h5>Goods Type :`+shipments[shipment]['GoodsType']+`</h5>
+            <h5>Expected Delivery Date :`+shipments[shipment]['DeliveryDate']+`</h5>
+            <h5>Delivery Number :`+shipments[shipment]['DeliveryNo']+`</h5>
+            <h5>Batch Id :`+shipments[shipment]['BatchId']+`</h5>
+            <h5>Shipment Description : `+shipments[shipment]['ShipmentDescription']+`</h5>
+          </div>
+          </div>
+            `;
+            i++;
+        }
+      }
+    }
+  } else {
+    localStorage.setItem("userdetail", t);
+    window.location.replace("/")
+  }
+} catch (error) {
+  console.error('Error:', error);
+}
+}
+async function deleteProfile(){
+  username=localStorage.getItem('username')
+  var dataToSend={'username':username}
+  const response = await fetch('/deleteProfilePic', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      const data = await response.json();
+      location.replace('/')
+}
+
+async function getDeviceData(){
+  username=localStorage.getItem('username')
+  var dataToSend={'username':username}
+  const response = await fetch('/getDeviceData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      const data = await response.json();
+      var dat = data.data
+      var count=1;
+      for (d in dat){
+        document.getElementById('deviceDataTable').innerHTML+=`
+        <tr id="eachdata`+dat[d]['Device_ID']+`"><td>`+count+`</td><td>`+dat[d]['Battery_Level']+`</td><td id="deviceId`+count+`">`+dat[d]['Device_ID']+`</td><td>`+dat[d]['First_Sensor_temperature']+`</td><td>`+dat[d]['Route_From']+`</td><td>`+dat[d]['Route_To']+`</td></tr>
+        `;
+        count++;
+      }
+}
+function display(i){
+  document.getElementById('show'+i).style.display='none'
+  document.getElementById('hide'+i).style.display='block'
+  document.getElementById('shipmentinformation'+i).style.display='block'
+}
+function undisplay(i){
+  document.getElementById('show'+i).style.display='block'
+  document.getElementById('hide'+i).style.display='none'
+  document.getElementById('shipmentinformation'+i).style.display='none'
+}
+function searchdata(){
+ var val = document.getElementById('searchinput').value;
+ var sel;
+ if(val==""){
+  var alldata=document.querySelectorAll('[id^="eachdata"]');
+ alldata.forEach(eachdata=> {
+  eachdata.style.display = 'table-row';
+ });
+ }
+ else{
+  var alldata=document.querySelectorAll('[id^="eachdata"]');
+ alldata.forEach(eachdata=> {
+  eachdata.style.display = 'none';
+ });
+ var searchdata = document.querySelectorAll('[id^="deviceId"]')
+ searchdata.forEach(eachdata=>{
+  var ed=eachdata.innerText
+  if (ed.includes(val)){
+    sel=document.querySelectorAll('[id^="eachdata'+ed+'"]')
+  }
+ });
+ sel.forEach(ee=>{
+  ee.style.display='table-row'
+})
+ }
+}
+</script>
+<!-- Add this script tag to your existing HTML code -->
+<script>
+  // Function to simulate text typing effect
+  function typeWriter(textElement, speed) {
+    const text = textElement.innerHTML;
+    textElement.innerHTML = '';
+    let i = 0;
+    const typeInterval = setInterval(() => {
+      if (i < text.length) {
+        textElement.innerHTML += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, speed);
+  }
+
+  // Call the typing effect for the specific element with the desired speed
+  document.addEventListener('DOMContentLoaded', function () {
+    var textElement = document.querySelector('.typing-effect');
+    typeWriter(textElement, 100); // Adjust the speed (in milliseconds) as needed
+  });
+</script>
+
+</body>
+</html>

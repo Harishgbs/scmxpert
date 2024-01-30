@@ -1,0 +1,62 @@
+version: '3'
+
+networks:
+  mynetwork:
+    driver: bridge
+
+services:
+  web:
+    image: myapp:1.0
+    ports:
+      - "5000:8000"
+  zookeeper:
+    image: 'ubuntu/zookeeper:latest'
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - mynetwork
+
+
+  kafka:
+    image: 'ubuntu/kafka:latest'
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_HEAP_OPTS=-Xmx1G
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    networks:
+      - mynetwork
+
+  server:
+    image: server:1.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+    networks:
+      - mynetwork
+    
+
+  producer:
+    image: producer:1.0
+    environment:
+      - bootstrap_servers=kafka:9092
+      - host=server
+    depends_on:
+      - server
+    networks:
+      - mynetwork
+
+  consumer:
+    image: consumer:1.0
+    environment:
+      - bootstrap_servers=kafka:9092
+    depends_on:
+      - producer
+    networks:
+      - mynetwork
